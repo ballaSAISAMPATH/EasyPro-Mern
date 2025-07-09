@@ -38,7 +38,7 @@ app.use("/easyPro/order", orderRouter);
 app.use("/easyPro/review", reviewRouter);
 app.use("/easyPro/resource", resourceRouter);
 
-app.post('/api/plagiarism', upload.single('file'), async (req, res) => {
+app.post('/easyPro/api/plagiarism', upload.single('file'), async (req, res) => {
   try {
     let textToAnalyze = '';
     let fileUrl = null;
@@ -159,7 +159,7 @@ app.post('/api/plagiarism', upload.single('file'), async (req, res) => {
 const PORT = process.env.PORT || 5555;
 
 app.listen(PORT, async () => {
-	console.log(`Server running in ${process.env.NODE_ENV} mode on port number ${PORT}`)
-	await connectDB();
-	await createAdminIfNotExists();
+    console.log(`Server running in ${process.env.NODE_ENV} mode on port number ${PORT}`)
+    await connectDB();
+    await createAdminIfNotExists();
 });
