@@ -10,7 +10,6 @@ export default function PlagiarismChecker() {
   const [errorMsg, setErrorMsg] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const allowedFileTypes = ['.pdf', '.doc', '.docx'];
 
   function formatFileSize(sizeInBytes) {
@@ -61,7 +60,7 @@ export default function PlagiarismChecker() {
         const formData = new FormData();
         formData.append('file', file);
 
-        const res = await axios.post('https://66a86d13f5f1.ngrok-free.app/api/plagiarism', formData);
+        const res = await axios.post(process.env.REACT_APP_BACKEND_URL+'/api/plagiarism', formData);
         setResult(res.data);
         setErrorMsg('✅ File uploaded successfully.');
       } else {
@@ -73,7 +72,7 @@ export default function PlagiarismChecker() {
         const formData = new FormData();
         formData.append('file', blob, 'text-input.pdf');
 
-        const res = await axios.post('https://66a86d13f5f1.ngrok-free.app/api/plagiarism', formData);
+        const res = await axios.post(process.env.REACT_APP_BACKEND_URL+'/api/plagiarism', formData);
         setResult(res.data);
         setErrorMsg('✅ Text converted to PDF and uploaded successfully.');
       }
