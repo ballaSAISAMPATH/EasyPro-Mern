@@ -11,11 +11,19 @@ const Home = () => {
 		<>
 			<NavBar />
 			<Hero />
-			<EssayProJourney />
-			<EssayWritersServices />
-			<TestimonialCards />
+			<div id="essay-pro-journey" className="pt-20">
+				<EssayProJourney />
+			</div>
+			<div id="essay-writers-services" className="pt-20">
+				<EssayWritersServices />
+			</div>
+			<div id="testimonials" className="pt-20">
+				<TestimonialCards />
+			</div>
 			<OrderNow />
-			<Footer />
+			<div id="footer">
+				<Footer />
+			</div>
 		</>
 	)
 }
