@@ -11,5 +11,9 @@ const uploadProfileImage = upload.single('profilePic');
 
 router.post('/login', userController.login);
 router.post('/register', uploadProfileImage, userController.register);
-router.post('/updateUser',userController.updateUserProfile);
+
+router.post('/updateUser', (req, res, next) => {
+  console.log("🔁 POST /updateUser hit");
+  next();
+}, userController.updateUserProfile);
 module.exports = router;

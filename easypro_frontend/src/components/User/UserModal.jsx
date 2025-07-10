@@ -13,10 +13,6 @@ const UserModal = ({
   const API_URL = process.env.REACT_APP_BACKEND_URL;
   
   useEffect(() => {
-	console.log(localStorage.getItem("userInfo"));
-	console.log(localStorage.getItem("userName"));
-	console.log(localStorage.getItem("email"));
-	
 	
     if (isOpen) {
       const userName = localStorage.getItem('userName');
@@ -46,8 +42,6 @@ const UserModal = ({
 	
 	//const response = await axios.post(`${API_URL}/user/update`,{...userData,userId:userId} );
 	const response = await axios.post(`${API_URL}/user/updateUser`,{...userData,userId:userId} );
-	console.log(response.data.user.email);
-	console.log(response.data.user.userName);
 	 setUserData({
           userName:response.data.user.userName,
           email:response.data.user.email,
