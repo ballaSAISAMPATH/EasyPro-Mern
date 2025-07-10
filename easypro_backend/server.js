@@ -38,7 +38,9 @@ app.use("/easyPro/order", orderRouter);
 app.use("/easyPro/review", reviewRouter);
 app.use("/easyPro/resource", resourceRouter);
 
-app.post('/easyPro/api/plagiarism', upload.single('file'), async (req, res) => {
+app.post('/api/plagiarism', upload.single('file'), async (req, res) => {
+  console.log("body",req);
+  
   try {
     let textToAnalyze = '';
     let fileUrl = null;

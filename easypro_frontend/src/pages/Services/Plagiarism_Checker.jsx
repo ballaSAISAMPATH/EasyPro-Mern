@@ -10,7 +10,6 @@ export default function PlagiarismChecker() {
   const [errorMsg, setErrorMsg] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const allowedFileTypes = ['.pdf', '.doc', '.docx'];
 
   function formatFileSize(sizeInBytes) {
@@ -47,11 +46,10 @@ export default function PlagiarismChecker() {
 
   async function handleSubmit() {
     setErrorMsg('');
-    console.log("ENV URL =", process.env.REACT_APP_BACKEND_URL);
 
     const wordCount = getWordCount(userPlagiarismText);
     if (!file && wordCount < 100) {
-      setErrorMsg('⚠ Please enter at least 100 words for plagiarism check.');
+      setErrorMsg('⚠️ Please enter at least 100 words for plagiarism check.');
       return;
     }
 
@@ -61,8 +59,8 @@ export default function PlagiarismChecker() {
       if (file) {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await axios.post(process.env.REACT_APP_BACKEND_URL+'/api/plagiarism', formData);
 
+        const res = await axios.post('http://localhost:5555/api/plagiarism', formData);
         setResult(res.data);
         setErrorMsg('✅ File uploaded successfully.');
       } else {
@@ -74,7 +72,7 @@ export default function PlagiarismChecker() {
         const formData = new FormData();
         formData.append('file', blob, 'text-input.pdf');
 
-        const res = await axios.post(process.env.REACT_APP_BACKEND_URL+'/api/plagiarism', formData);
+        const res = await axios.post('http://localhost:5555/api/plagiarism', formData);
         setResult(res.data);
         setErrorMsg('✅ Text converted to PDF and uploaded successfully.');
       }
