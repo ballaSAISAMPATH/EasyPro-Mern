@@ -45,7 +45,7 @@ const UserModal = ({
 	console.log(`${API_URL}/user/update`);
 	
 	//const response = await axios.post(`${API_URL}/user/update`,{...userData,userId:userId} );
-	const response = await axios.post("https://601deabaeb7a.ngrok-free.app/easyPro/user/updateUser",{...userData,userId:userId} );
+	const response = await axios.post(`${API_URL}/user/updateUser`,{...userData,userId:userId} );
 	console.log(response.data.user.email);
 	console.log(response.data.user.userName);
 	 setUserData({
