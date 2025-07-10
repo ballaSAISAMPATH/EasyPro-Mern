@@ -28,7 +28,7 @@ const NavBar = () => {
 	const navLinks = [
 		{
 			label: "Services", links: [
-				{ label: 'Essay Writing', action: () => scrollToSection('essay-writers-services') },
+				{ label: 'Essay Writing',link:"/" },
 				{ label: 'Plagiarism Checker', link: "/" },
 				{ label: 'Paraphrasing', link: "/" },
 				{ label: 'Thesis Writing', link: "/" },
