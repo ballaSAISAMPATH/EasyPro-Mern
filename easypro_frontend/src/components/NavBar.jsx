@@ -15,10 +15,22 @@ const NavBar = () => {
 	const [username,setUserName]=useState("");
 	const navigate = useNavigate();
 
+	// Function to scroll to section
+	const scrollToSection = (sectionId) => {
+		const element = document.getElementById(sectionId);
+		if (element) {
+			element.scrollIntoView({ 
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
+		setIsMobileMenuOpen(false); // Close mobile menu after clicking
+	};
+
 	const navLinks = [
 		{
 			label: "Services", links: [
-				{ label: 'Essay Writing', link: "/" },
+				{ label: 'Essay Writing',link:"/" },
 				{ label: 'Plagiarism Checker', link: "/" },
 				{ label: 'Paraphrasing', link: "/" },
 				{ label: 'Thesis Writing', link: "/" },
@@ -35,23 +47,23 @@ const NavBar = () => {
 				{ label: 'Documents', link: "/" }
 			]
 		},
-		{ label: "How it works", link: "/howitworks" },
-		{ label: "Top Writers", link: "/top-writers" },
+		{ label: "How it works", action: () => scrollToSection('essay-pro-journey') },
+		{ label: "Top Writers", action: () => scrollToSection('essay-writers-services') },
 		{
 			label: "Who Are We", links: [
-				{ label: 'Reviews', link: "/reviews" },
-				{ label: 'FAQS', link: "/faqs" },
-				{ label: 'Contact Us', link: "/contactus" }
+				{ label: 'Reviews', action: () => scrollToSection('testimonials') },
+				{ label: 'FAQS', action: () => scrollToSection('footer') },
+				{ label: 'Contact Us', action: () => scrollToSection('footer') }
 			]
 		}
 	];
 
 	const loggedNavLinks = [
 		{ label: "My Orders", link: "/user/orders" },
-		{ label: "Top Writers", link: "/top-writers" },
+		{ label: "Top Writers", action: () => scrollToSection('essay-writers-services') },
 		{
 			label: "Services", links: [
-				{ label: 'Essay Writing', link: "/" },
+				{ label: 'Essay Writing', action: () => scrollToSection('essay-writers-services') },
 				{ label: 'Plagiarism Checker', link: "/Plagiarism_Checker" },
 				{ label: 'Paraphrasing', link: "/" },
 				{ label: 'Thesis Writing', link: "/" },
@@ -113,6 +125,18 @@ const NavBar = () => {
 		setActiveDropdown(null);
 	};
 
+	const handleNavItemClick = (item) => {
+		if (item.action) {
+			item.action();
+		} else if (item.link) {
+			if (item.type) {
+				navigate(item.link, { state: { type: item.type } });
+			} else {
+				navigate(item.link);
+			}
+		}
+	};
+
 	return (
 		<div className="bg-white mb-10 md:mb-20">
 			<nav className="fixed top-0 left-0 right-0 z-50 bg-white rounded-none md:px-20 px-4 py-3">
@@ -146,13 +170,13 @@ const NavBar = () => {
 														onMouseLeave={handleDropdownLeave}
 													>
 														{navItem.links.map((dropdownItem, dropdownIndex) => (
-															<a
+															<div
 																key={dropdownIndex}
-																href={dropdownItem.link}
-																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+																onClick={() => handleNavItemClick(dropdownItem)}
+																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md cursor-pointer"
 															>
 																{dropdownItem.label}
-															</a>
+															</div>
 														))}
 													</div>
 												)}
@@ -161,13 +185,13 @@ const NavBar = () => {
 									} else {
 										// Regular link (no dropdown)
 										return (
-											<a
+											<button
 												key={index}
-												href={navItem.link}
+												onClick={() => handleNavItemClick(navItem)}
 												className="text-gray-700 hover:text-gray-900 transition-colors"
 											>
 												{navItem.label}
-											</a>
+											</button>
 										);
 									}
 								})}
@@ -196,15 +220,13 @@ const NavBar = () => {
 														onMouseLeave={handleDropdownLeave}
 													>
 														{navItem.links.map((dropdownItem, dropdownIndex) => (
-															<span
+															<div
 																key={dropdownIndex}
-																onClick={() => navigate(dropdownItem.link, {
-																	state: dropdownItem.type ? { type: dropdownItem.type } : undefined
-																})}
-																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+																onClick={() => handleNavItemClick(dropdownItem)}
+																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md cursor-pointer"
 															>
 																{dropdownItem.label}
-															</span>
+															</div>
 														))}
 													</div>
 												)}
@@ -213,13 +235,13 @@ const NavBar = () => {
 									} else {
 										// Regular link (no dropdown)
 										return (
-											<a
+											<button
 												key={index}
-												href={navItem.link}
+												onClick={() => handleNavItemClick(navItem)}
 												className="text-gray-700 hover:text-gray-900 transition-colors"
 											>
 												{navItem.label}
-											</a>
+											</button>
 										);
 									}
 								})}
@@ -310,31 +332,25 @@ const NavBar = () => {
 									// Check if it's a dropdown (has links array)
 									if (navItem.links) {
 										return (
-											<div
-												key={index}
-												className="relative"
-												onMouseEnter={() => handleDropdownEnter(navItem.label.toLowerCase().replace(/\s+/g, ''))}
-												onMouseLeave={handleDropdownLeave}
-											>
-												<button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors">
+											<div key={index} className="relative">
+												<button 
+													className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors"
+													onClick={() => setActiveDropdown(activeDropdown === navItem.label.toLowerCase().replace(/\s+/g, '') ? null : navItem.label.toLowerCase().replace(/\s+/g, ''))}
+												>
 													<span>{navItem.label}</span>
 													<ChevronDown className="w-4 h-4" />
 												</button>
 
 												{activeDropdown === navItem.label.toLowerCase().replace(/\s+/g, '') && (
-													<div
-														className="absolute top-4 left-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50"
-														onMouseEnter={() => handleDropdownEnter(navItem.label.toLowerCase().replace(/\s+/g, ''))}
-														onMouseLeave={handleDropdownLeave}
-													>
+													<div className="mt-2 ml-4 space-y-2">
 														{navItem.links.map((dropdownItem, dropdownIndex) => (
-															<a
+															<div
 																key={dropdownIndex}
-																href={dropdownItem.link}
-																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+																onClick={() => handleNavItemClick(dropdownItem)}
+																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
 															>
 																{dropdownItem.label}
-															</a>
+															</div>
 														))}
 													</div>
 												)}
@@ -343,13 +359,13 @@ const NavBar = () => {
 									} else {
 										// Regular link (no dropdown)
 										return (
-											<a
+											<button
 												key={index}
-												href={navItem.link}
-												className="text-gray-700 hover:text-gray-900 transition-colors"
+												onClick={() => handleNavItemClick(navItem)}
+												className="text-left text-gray-700 hover:text-gray-900 transition-colors"
 											>
 												{navItem.label}
-											</a>
+											</button>
 										);
 									}
 								})}
@@ -375,31 +391,25 @@ const NavBar = () => {
 									// Check if it's a dropdown (has links array)
 									if (navItem.links) {
 										return (
-											<div
-												key={index}
-												className="relative"
-												onMouseEnter={() => handleDropdownEnter(navItem.label.toLowerCase().replace(/\s+/g, ''))}
-												onMouseLeave={handleDropdownLeave}
-											>
-												<button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors">
+											<div key={index} className="relative">
+												<button 
+													className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors"
+													onClick={() => setActiveDropdown(activeDropdown === navItem.label.toLowerCase().replace(/\s+/g, '') ? null : navItem.label.toLowerCase().replace(/\s+/g, ''))}
+												>
 													<span>{navItem.label}</span>
 													<ChevronDown className="w-4 h-4" />
 												</button>
 
 												{activeDropdown === navItem.label.toLowerCase().replace(/\s+/g, '') && (
-													<div
-														className="absolute top-4 left-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50"
-														onMouseEnter={() => handleDropdownEnter(navItem.label.toLowerCase().replace(/\s+/g, ''))}
-														onMouseLeave={handleDropdownLeave}
-													>
+													<div className="mt-2 ml-4 space-y-2">
 														{navItem.links.map((dropdownItem, dropdownIndex) => (
-															<a
+															<div
 																key={dropdownIndex}
-																href={dropdownItem.link}
-																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+																onClick={() => handleNavItemClick(dropdownItem)}
+																className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
 															>
 																{dropdownItem.label}
-															</a>
+															</div>
 														))}
 													</div>
 												)}
@@ -408,13 +418,13 @@ const NavBar = () => {
 									} else {
 										// Regular link (no dropdown)
 										return (
-											<a
+											<button
 												key={index}
-												href={navItem.link}
-												className="text-gray-700 hover:text-gray-900 transition-colors"
+												onClick={() => handleNavItemClick(navItem)}
+												className="text-left text-gray-700 hover:text-gray-900 transition-colors"
 											>
 												{navItem.label}
-											</a>
+											</button>
 										);
 									}
 								})}

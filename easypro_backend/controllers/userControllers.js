@@ -178,3 +178,48 @@ exports.login = async (req, res) => {
 		});
 	}
 };
+
+exports.updateUserProfile = async (req, res) => {
+  const { userId, userName, email } = req.body;
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required." });
+  }
+
+  try {
+    if (!userName && !email) {
+      return res.status(400).json({ message: "No fields provided to update." });
+    }
+
+    const updates = {};
+    if (userName) updates.userName = userName.trim();
+    if (email) updates.email = email.trim().toLowerCase();
+
+    const existingUser = await User.findOne({
+      $or: [{ userName: updates.userName }, { email: updates.email }],
+      _id: { $ne: userId }
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ message: "Username or Email already in use." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({
+      message: "User profile updated successfully.",
+      user: updatedUser
+    });
+
+  } catch (error) {
+    console.error("Update user error:", error);
+    res.status(500).json({ message: "Server error during update." });
+  }
+};
