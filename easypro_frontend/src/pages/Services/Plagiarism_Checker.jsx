@@ -10,7 +10,6 @@ export default function PlagiarismChecker() {
   const [errorMsg, setErrorMsg] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const allowedFileTypes = ['.pdf', '.doc', '.docx'];
 
   function formatFileSize(sizeInBytes) {
