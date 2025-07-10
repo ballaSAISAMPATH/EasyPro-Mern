@@ -11,5 +11,5 @@ const uploadProfileImage = upload.single('profilePic');
 
 router.post('/login', userController.login);
 router.post('/register', uploadProfileImage, userController.register);
-
+router.post('/updateUser',userController.updateUserProfile);
 module.exports = router;

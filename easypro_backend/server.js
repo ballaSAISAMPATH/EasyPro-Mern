@@ -37,7 +37,6 @@ app.use("/easyPro/writer", writerRouter);
 app.use("/easyPro/order", orderRouter);
 app.use("/easyPro/review", reviewRouter);
 app.use("/easyPro/resource", resourceRouter);
-
 app.post('/api/plagiarism', upload.single('file'), async (req, res) => {
   try {
     let textToAnalyze = '';
