@@ -3,14 +3,16 @@ import { ChevronDown, LogOut, Menu, User, X } from 'lucide-react';
 import AuthModal from './AuthModal';
 import LogoutModal from './LogoutModal';
 import { useNavigate } from 'react-router-dom';
-
+import UserModal from './User/UserModal';
 const NavBar = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [activeDropdown, setActiveDropdown] = useState(null);
 	const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUserModalOpen, setIsUserModalOpen] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [user, setUser] = useState(null);
+	const [username,setUserName]=useState("");
 	const navigate = useNavigate();
 
 	const navLinks = [
@@ -73,10 +75,13 @@ const NavBar = () => {
 	];
 
 	const userProfileDropdown = [
-		{ icon: <User className='w-4' />, label: 'Profile', action: () => window.location.href = '/user' },
+		{ icon: <User className='w-4' />, label: 'Profile', action: () =>{
+			setIsUserModalOpen(true);
+			
+		}  },
 		{ icon: <LogOut className='w-4' />, label: 'Logout', action: () => setIsLogoutModalOpen(true) }
 	];
-
+	
 	const handleLogout = () => {
 		setIsAuthenticated(false);
 		setUser(null);
@@ -88,15 +93,17 @@ const NavBar = () => {
 
 	useEffect(() => {
 		const storedUser = JSON.parse(localStorage.getItem('userInfo'));
+		const userNamee = localStorage.getItem('userName');
 		const token = localStorage.getItem('token');
 		if (storedUser && token) {
 			if (storedUser.role === "admin") {
 				window.location.replace('/admin/home');
 			}
 			setUser(storedUser);
+			setUserName(userNamee);
 			setIsAuthenticated(true);
 		}
-	}, [isModalOpen]);
+	}, [isModalOpen,username]);
 
 	const handleDropdownEnter = (dropdown) => {
 		setActiveDropdown(dropdown);
@@ -241,7 +248,7 @@ const NavBar = () => {
 										alt={user?.userName}
 										className="w-8 h-8 rounded-full"
 									/>
-									<span className="hidden md:block">{user?.userName}</span>
+									<span className="hidden md:block">{username}</span>
 									<ChevronDown className="w-4 h-4" />
 								</button>
 
@@ -358,7 +365,7 @@ const NavBar = () => {
 											className="w-10 h-10 rounded-full"
 										/>
 										<div>
-											<div className="font-semibold text-gray-800">{user?.userName}</div>
+											<div className="font-semibold text-gray-800">{username}</div>
 											<div className="text-sm text-gray-600">{user?.email}</div>
 										</div>
 									</div>
@@ -440,6 +447,11 @@ const NavBar = () => {
 				isOpen={isLogoutModalOpen}
 				onClose={() => setIsLogoutModalOpen(false)}
 				onConfirm={handleLogout}
+			/>
+
+			<UserModal
+				isOpen={isUserModalOpen}
+				isClose={()=>setIsUserModalOpen(false)}
 			/>
 		</div>
 	);

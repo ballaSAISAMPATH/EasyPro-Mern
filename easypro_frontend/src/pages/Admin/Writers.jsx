@@ -259,7 +259,7 @@ const Writers = () => {
 					}
 				});
 
-				if (response.data.success) {
+				if (response.data.success){
 					toast.success('Writer added successfully!');
 					setShowModal(false);
 					resetForm();
